@@ -17,12 +17,14 @@ export default function Home() {
 
     const db = useSQLiteContext();
 
+    // Make sure that all the data in the app are the same a those in the db
     React.useEffect(() => {
         db.withTransactionAsync(async () => {
         await getData();
         });
     }, [db]);
 
+    // Get all transaction in decreasing order from new to old transaction (based on transaction's date)
     async function getData() {
         const result = await db.getAllAsync<Transaction>(
         `SELECT * FROM Transactions ORDER BY date DESC;`
@@ -58,6 +60,7 @@ export default function Home() {
             setTransactionsByMonth(transactionsByMonth[0]);
         }
 
+    // Remove transaction from databse
     async function deleteTransaction(id: number) {
         db.withTransactionAsync(async () => {
         await db.runAsync(`DELETE FROM Transactions WHERE id = ?;`, [id]);
@@ -65,6 +68,7 @@ export default function Home() {
         });
     }
 
+    // Insert transaction inside the database
     async function insertTransaction(transaction: Transaction) {
         db.withTransactionAsync(async () => {
         await db.runAsync(
@@ -89,6 +93,7 @@ export default function Home() {
             <TransactionSummary
                 totalExpenses={transactionsByMonth.totalExpenses}
                 totalIncome={transactionsByMonth.totalIncome}
+                transactions={transactions}
             />
             <TransactionList
                 categories={categories}
@@ -102,12 +107,18 @@ export default function Home() {
 function TransactionSummary({
     totalIncome,
     totalExpenses,
-    }: TransactionsByMonth) {
-    const savings = totalIncome - totalExpenses;
-    const readablePeriod = new Date().toLocaleDateString("default", {
-        month: "long",
-        year: "numeric",
-    });
+    transactions,
+}: TransactionsByMonth & { transactions: Transaction[] }) {
+    // Calculate total income, expenses, and savings from all transactions
+    const totalIncomeAllTime = transactions.reduce((acc, curr) => {
+        return curr.type === 'Income' ? acc + curr.amount : acc;
+    }, 0);
+
+    const totalExpensesAllTime = transactions.reduce((acc, curr) => {
+        return curr.type === 'Expense' ? acc + curr.amount : acc;
+    }, 0);
+
+    const savingsAllTime = totalIncomeAllTime - totalExpensesAllTime;
 
     // Function to determine the style based on the value (positive or negative)
     const getMoneyTextStyle = (value: number): TextStyle => ({
@@ -122,25 +133,51 @@ function TransactionSummary({
     };
 
     return (
-        <Card style={styles.container}>
-            <Text style={styles.periodTitle}>Summary for {readablePeriod}</Text>
-            <Text style={styles.summaryText}>
-                Income:{" "}
-                <Text style={getMoneyTextStyle(totalIncome)}>
-                {formatMoney(totalIncome)}
+        <ScrollView horizontal>
+            <Card style={styles.container}>
+                <Text style={styles.periodTitle}>Summary for Current Month</Text>
+                <Text style={styles.summaryText}>
+                    Income:{" "}
+                    <Text style={getMoneyTextStyle(totalIncome)}>
+                        {formatMoney(totalIncome)}
+                    </Text>
                 </Text>
-            </Text>
-            <Text style={styles.summaryText}>
-                Total Expenses:{" "}
-                <Text style={getMoneyTextStyle(totalExpenses)}>
-                {formatMoney(totalExpenses)}
+                <Text style={styles.summaryText}>
+                    Expenses:{" "}
+                    <Text style={getMoneyTextStyle(totalExpenses)}>
+                        {formatMoney(totalExpenses)}
+                    </Text>
                 </Text>
-            </Text>
-            <Text style={styles.summaryText}>
-                Savings:{" "}
-                <Text style={getMoneyTextStyle(savings)}>{formatMoney(savings)}</Text>
-            </Text>
-        </Card>
+                <Text style={styles.summaryText}>
+                    Savings:{" "}
+                    <Text style={getMoneyTextStyle(totalIncome - totalExpenses)}>
+                        {formatMoney(totalIncome - totalExpenses)}
+                    </Text>
+                </Text>
+            </Card>
+
+            <Card style={styles.container}>
+                <Text style={styles.periodTitle}>Summary for All Time</Text>
+                <Text style={styles.summaryText}>
+                    Income:{" "}
+                    <Text style={getMoneyTextStyle(totalIncomeAllTime)}>
+                        {formatMoney(totalIncomeAllTime)}
+                    </Text>
+                </Text>
+                <Text style={styles.summaryText}>
+                    Expenses:{" "}
+                    <Text style={getMoneyTextStyle(totalExpensesAllTime)}>
+                        {formatMoney(totalExpensesAllTime)}
+                    </Text>
+                </Text>
+                <Text style={styles.summaryText}>
+                    Savings:{" "}
+                    <Text style={getMoneyTextStyle(savingsAllTime)}>
+                        {formatMoney(savingsAllTime)}
+                    </Text>
+                </Text>
+            </Card>
+        </ScrollView>
     );
 }
 
@@ -148,6 +185,7 @@ const styles = StyleSheet.create({
     container: {
         marginBottom: 15,
         paddingBottom: 7,
+        marginRight : 15,
     },
     periodTitle: {
         fontSize: 20,
