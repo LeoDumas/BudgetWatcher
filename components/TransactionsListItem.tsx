@@ -14,6 +14,7 @@ interface TransactionsListItemType{
 const TransactionsListItem:React.FC<TransactionsListItemType> = (
     {transaction, categoryInfo}
 ) => {
+    // Conditionnal rendering dpending if it's an expense or a income
     const iconName = transaction.type === "Expense" ? "minuscircle" : "pluscircle";
     const color = transaction.type === "Expense" ? "red" : "green";
     const categoryColor = CategoriesColors[categoryInfo?.name ?? "Default"];

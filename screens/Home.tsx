@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ScrollView, StyleSheet, Text, TextStyle, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextStyle } from "react-native";
 import { Category, Transaction, TransactionsByMonth } from "../types";
 import { useSQLiteContext } from "expo-sqlite/next";
 import TransactionList from "../components/TransactionsList";
@@ -85,16 +85,16 @@ export default function Home() {
 
     return (
         <ScrollView contentContainerStyle={{ padding: 15, paddingVertical: 170 }}>
-        <AddTransaction insertTransaction={insertTransaction} />
-        <TransactionSummary
-            totalExpenses={transactionsByMonth.totalExpenses}
-            totalIncome={transactionsByMonth.totalIncome}
-        />
-        <TransactionList
-            categories={categories}
-            transactions={transactions}
-            deleteTransaction={deleteTransaction}
-        />
+            <AddTransaction insertTransaction={insertTransaction} />
+            <TransactionSummary
+                totalExpenses={transactionsByMonth.totalExpenses}
+                totalIncome={transactionsByMonth.totalIncome}
+            />
+            <TransactionList
+                categories={categories}
+                transactions={transactions}
+                deleteTransaction={deleteTransaction}
+            />
         </ScrollView>
     );
 }
@@ -123,23 +123,23 @@ function TransactionSummary({
 
     return (
         <Card style={styles.container}>
-        <Text style={styles.periodTitle}>Summary for {readablePeriod}</Text>
-        <Text style={styles.summaryText}>
-            Income:{" "}
-            <Text style={getMoneyTextStyle(totalIncome)}>
-            {formatMoney(totalIncome)}
+            <Text style={styles.periodTitle}>Summary for {readablePeriod}</Text>
+            <Text style={styles.summaryText}>
+                Income:{" "}
+                <Text style={getMoneyTextStyle(totalIncome)}>
+                {formatMoney(totalIncome)}
+                </Text>
             </Text>
-        </Text>
-        <Text style={styles.summaryText}>
-            Total Expenses:{" "}
-            <Text style={getMoneyTextStyle(totalExpenses)}>
-            {formatMoney(totalExpenses)}
+            <Text style={styles.summaryText}>
+                Total Expenses:{" "}
+                <Text style={getMoneyTextStyle(totalExpenses)}>
+                {formatMoney(totalExpenses)}
+                </Text>
             </Text>
-        </Text>
-        <Text style={styles.summaryText}>
-            Savings:{" "}
-            <Text style={getMoneyTextStyle(savings)}>{formatMoney(savings)}</Text>
-        </Text>
+            <Text style={styles.summaryText}>
+                Savings:{" "}
+                <Text style={getMoneyTextStyle(savings)}>{formatMoney(savings)}</Text>
+            </Text>
         </Card>
     );
 }
@@ -148,7 +148,6 @@ const styles = StyleSheet.create({
     container: {
         marginBottom: 15,
         paddingBottom: 7,
-        // Add other container styles as necessary
     },
     periodTitle: {
         fontSize: 20,

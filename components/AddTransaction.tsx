@@ -11,8 +11,7 @@ export default function AddTransaction({
     }: {
     insertTransaction(transaction: Transaction): Promise<void>;
     }) {
-    const [isAddingTransaction, setIsAddingTransaction] =
-        React.useState<boolean>(false);
+    const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [categories, setCategories] = React.useState<Category[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
@@ -22,10 +21,13 @@ export default function AddTransaction({
     const [categoryId, setCategoryId] = React.useState<number>(1);
     const db = useSQLiteContext();
 
+    // Fetching categories based on the current tab (expense or income)
+    // When changing tab when New Entry button click
     React.useEffect(() => {
         getExpenseType(currentTab);
     }, [currentTab]);
 
+    // Based on previous useEffect, get category/type that are in expense or income (Groceries, Salary...)
     async function getExpenseType(currentTab: number) {
         setCategory(currentTab === 0 ? "Expense" : "Income");
         const type = currentTab === 0 ? "Expense" : "Income";
@@ -37,6 +39,7 @@ export default function AddTransaction({
         setCategories(result);
     }
 
+    // Add the transaction with provided data
     async function handleSave() {
         console.log({
         amount: Number(amount),
@@ -45,6 +48,7 @@ export default function AddTransaction({
         date: new Date().getTime() / 1000,
         type: category as "Expense" | "Income",
         });
+
 
         // @ts-ignore
         await insertTransaction({

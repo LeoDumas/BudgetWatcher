@@ -9,66 +9,67 @@ import Home from './screens/Home';
 
 const Stack = createNativeStackNavigator();
 
+// Load the local database
 const loadDB = async() =>{
-  const dbName = "budgetDB.db";
-  const dbAsset = require("./assets/budgetDB.db");
-  const dbUri = Asset.fromModule(dbAsset).uri;
-  const dbFilePath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
+    const dbName = "budgetDB.db";
+    const dbAsset = require("./assets/budgetDB.db");
+    const dbUri = Asset.fromModule(dbAsset).uri;
+    const dbFilePath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
 
-  const fileInfo = await FileSystem.getInfoAsync(dbFilePath);
-  if (!fileInfo.exists) {
-    await FileSystem.makeDirectoryAsync(
-      `${FileSystem.documentDirectory}SQLite`,
-      {intermediates: true}
+    const fileInfo = await FileSystem.getInfoAsync(dbFilePath);
+    if (!fileInfo.exists) {
+        await FileSystem.makeDirectoryAsync(
+        `${FileSystem.documentDirectory}SQLite`,
+        {intermediates: true}
     );
 
-    await FileSystem.downloadAsync(dbUri, dbFilePath);
-  }
+        await FileSystem.downloadAsync(dbUri, dbFilePath);
+    }
 }
 
 export default function App() {
-  const [dbLoaded, setDbLoaded] = useState<boolean>(false)
+    const [dbLoaded, setDbLoaded] = useState<boolean>(false)
 
-  useEffect (() => {
-    loadDB()
-    .then(() => setDbLoaded(true))
-    .catch((e) => console.error(e));
-  }, []);
+    useEffect (() => {
+        loadDB()
+        .then(() => setDbLoaded(true))
+        .catch((e) => console.error(e));
+    }, []);
 
-  if (!dbLoaded) return(
-    <View style={{flex:1}}>
-      <ActivityIndicator size={"large"} />
-      <Text>Loading ...</Text>
-    </View>
-    )
-
-  return (
-    <NavigationContainer>
-      <Suspense
-        fallback={
-          <View style={{flex:1}}>
+    if (!dbLoaded) return(
+        <View style={{flex:1}}>
             <ActivityIndicator size={"large"} />
             <Text>Loading ...</Text>
-          </View>
-        }
-      >
-        {/* SQLiteProvider allows children components to have access to the databse */}
-        <SQLiteProvider
-          useSuspense={true}
-          databaseName="budgetDB.db"
-        >
-          <Stack.Navigator>
-            <Stack.Screen
-              name='Home'
-              component={Home}
-              options={{
-                headerTitle : "BudgetWatcher",
-                headerLargeTitle: true,
-              }}
-            />
-          </Stack.Navigator>
-        </SQLiteProvider>
-      </Suspense>
-    </NavigationContainer>
-  );
+        </View>
+        )
+
+    return (
+        <NavigationContainer>
+            <Suspense
+                fallback={
+                <View style={{flex:1}}>
+                    <ActivityIndicator size={"large"} />
+                    <Text>Loading ...</Text>
+                </View>
+                }
+            >
+                {/* SQLiteProvider allows children components to have access to the databse */}
+                <SQLiteProvider
+                useSuspense={true}
+                databaseName="budgetDB.db"
+                >
+                <Stack.Navigator>
+                    <Stack.Screen
+                    name='Home'
+                    component={Home}
+                    options={{
+                        headerTitle : "BudgetWatcher",
+                        headerLargeTitle: true,
+                    }}
+                    />
+                </Stack.Navigator>
+                </SQLiteProvider>
+            </Suspense>
+        </NavigationContainer>
+    );
 }
