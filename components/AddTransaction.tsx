@@ -70,53 +70,56 @@ export default function AddTransaction({
         <View style={{ marginBottom: 15 }}>
         {isAddingTransaction ? (
             <View>
-            <Card>
-                <TextInput
-                placeholder="$Amount"
-                style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
-                keyboardType="numeric"
-                onChangeText={(text) => {
-                    // Remove any non-numeric characters before setting the state
-                    const numericValue = text.replace(/[^0-9.]/g, "");
-                    setAmount(numericValue);
-                }}
-                />
-                <TextInput
-                placeholder="Description"
-                style={{ marginBottom: 15 }}
-                onChangeText={setDescription}
-                />
-                <Text style={{ marginBottom: 6 }}>Select a entry type</Text>
-                <SegmentedControl
-                values={["Expense", "Income"]}
-                style={{ marginBottom: 15 }}
-                selectedIndex={0}
-                onChange={(event) => {
-                    setCurrentTab(event.nativeEvent.selectedSegmentIndex);
-                }}
-                />
-                {categories.map((cat) => (
-                <CategoryButton
-                    key={cat.name}
-                    // @ts-ignore
-                    id={cat.id}
-                    title={cat.name}
-                    isSelected={typeSelected === cat.name}
-                    setTypeSelected={setTypeSelected}
-                    setCategoryId={setCategoryId}
-                />
-                ))}
-            </Card>
-            <View
-                style={{ flexDirection: "row", justifyContent: "space-around" }}
-            >
-                <Button
-                title="Cancel"
-                color="red"
-                onPress={() => setIsAddingTransaction(false)}
-                />
-                <Button title="Save" onPress={handleSave} />
-            </View>
+                <Card>
+                    <TextInput
+                    placeholder="$Amount"
+                    style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+                    keyboardType="numeric"
+                    onChangeText={(text) => {
+                        // Remove any non-numeric characters before setting the state
+                        const numericValue = text.replace(/[^0-9.]/g, "");
+                        setAmount(numericValue);
+                    }}
+                    />
+
+                    <TextInput
+                    placeholder="Description"
+                    style={{ marginBottom: 15 }}
+                    onChangeText={setDescription}
+                    />
+
+                    <Text style={{ marginBottom: 6 }}>Select a entry type</Text>
+
+                    <SegmentedControl
+                    values={["Expense", "Income"]}
+                    style={{ marginBottom: 15 }}
+                    selectedIndex={0}
+                    onChange={(event) => {
+                        setCurrentTab(event.nativeEvent.selectedSegmentIndex);
+                    }}
+                    />
+
+                    {categories.map((cat) => (
+                        <CategoryButton
+                            key={cat.name}
+                            // @ts-ignore
+                            id={cat.id}
+                            title={cat.name}
+                            isSelected={typeSelected === cat.name}
+                            setTypeSelected={setTypeSelected}
+                            setCategoryId={setCategoryId}
+                        />
+                    ))}
+                </Card>
+                <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+                    <Button
+                    title="Cancel"
+                    color="red"
+                    onPress={() => setIsAddingTransaction(false)}
+                    />
+
+                    <Button title="Save" onPress={handleSave} />
+                </View>
             </View>
         ) : (
             <AddButton setIsAddingTransaction={setIsAddingTransaction} />
@@ -187,10 +190,10 @@ function AddButton({
             borderRadius: 15,
         }}
         >
-        <MaterialIcons name="add-circle-outline" size={24} color="#007BFF" />
-        <Text style={{ fontWeight: "700", color: "#007BFF", marginLeft: 5 }}>
-            New Entry
-        </Text>
+            <MaterialIcons name="add-circle-outline" size={24} color="#007BFF" />
+            <Text style={{ fontWeight: "700", color: "#007BFF", marginLeft: 5 }}>
+                New Entry
+            </Text>
         </TouchableOpacity>
     );
 }

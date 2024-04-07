@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Alert } from 'react-native'
+import { View, TouchableOpacity, Alert, ScrollView } from 'react-native'
 import React from 'react'
 import { Category, Transaction } from '../types'
 import TransactionsListItem from './TransactionsListItem'
@@ -31,6 +31,7 @@ const TransactionsList:React.FC<TransactionsListType> = ({
         );
     };
     return (
+        <ScrollView>
         <View style={{ gap: 16}}>
             {transactions.map((transaction) => {
                 const categCurrentItem = categories.find(
@@ -48,6 +49,7 @@ const TransactionsList:React.FC<TransactionsListType> = ({
                 )
             })}
         </View>
+        </ScrollView>
     )
 }
 

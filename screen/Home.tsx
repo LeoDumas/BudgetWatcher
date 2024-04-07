@@ -5,6 +5,7 @@ import { useSQLiteContext } from "expo-sqlite/next";
 import TransactionList from "../components/TransactionsList";
 import Card from "../components/ui/Card";
 import AddTransaction from "../components/AddTransaction";
+import NavBar from "../components/NavBar";
 
 export default function Home() {
     const [categories, setCategories] = React.useState<Category[]>([]);
@@ -17,7 +18,7 @@ export default function Home() {
 
     const db = useSQLiteContext();
 
-    // Make sure that all the data in the app are the same a those in the db
+    // Make sure that all the data are updated
     React.useEffect(() => {
         db.withTransactionAsync(async () => {
         await getData();
@@ -57,8 +58,9 @@ export default function Home() {
             `,
             [startOfMonthTimestamp, endOfMonthTimestamp]
             );
-            setTransactionsByMonth(transactionsByMonth[0]);
-        }
+            setTransactionsByMonth(transactionsByMonth[0]
+        );
+    }
 
     // Remove transaction from databse
     async function deleteTransaction(id: number) {
@@ -89,6 +91,7 @@ export default function Home() {
 
     return (
         <ScrollView contentContainerStyle={{ padding: 15, paddingVertical: 170 }}>
+            <NavBar/>
             <AddTransaction insertTransaction={insertTransaction} />
             <TransactionSummary
                 totalExpenses={transactionsByMonth.totalExpenses}
@@ -157,7 +160,7 @@ function TransactionSummary({
             </Card>
 
             <Card style={styles.container}>
-                <Text style={styles.periodTitle}>Summary for All Time</Text>
+                <Text style={styles.periodTitle}>All time summary</Text>
                 <Text style={styles.summaryText}>
                     Income:{" "}
                     <Text style={getMoneyTextStyle(totalIncomeAllTime)}>

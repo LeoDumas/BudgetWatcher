@@ -5,9 +5,14 @@ import { Suspense, useEffect, useState } from 'react';
 import { SQLiteProvider } from 'expo-sqlite/next';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import Home from './screens/Home';
+// import { createStackNavigator } from '@react-navigation/stack';
+import { RootStackParamList } from './types'
 
-const Stack = createNativeStackNavigator();
+// Screen
+import Home from './screen/Home';
+import Stats from './screen/Stats';
+
+const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 // Load the local database
 const loadDB = async() =>{
@@ -58,16 +63,20 @@ export default function App() {
                 useSuspense={true}
                 databaseName="budgetDB.db"
                 >
-                <Stack.Navigator>
-                    <Stack.Screen
-                    name='Home'
-                    component={Home}
-                    options={{
-                        headerTitle : "BudgetWatcher",
-                        headerLargeTitle: true,
-                    }}
-                    />
-                </Stack.Navigator>
+                    <RootStack.Navigator initialRouteName='Home'>
+                        <RootStack.Screen
+                            name='Home'
+                            component={Home}
+                            options={{
+                                headerTitle : "BudgetWatcher",
+                                headerLargeTitle: true,
+                            }}
+                        />
+                        <RootStack.Screen
+                            name="Stats"
+                            component={Stats}
+                        />
+                    </RootStack.Navigator>
                 </SQLiteProvider>
             </Suspense>
         </NavigationContainer>

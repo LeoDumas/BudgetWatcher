@@ -19,3 +19,21 @@ export interface TransactionsByMonth{
     totalExpenses: number;
     totalIncome: number;
 }
+
+// Used for navigation
+export type RootStackParamList = {
+    Home: undefined;
+    Stats: undefined;
+};
+
+export type DataPoint = {
+    name: string;
+    value: number;
+    color: string;
+};
+
+export type PieChartProps = {
+    width: number;
+    height: number;
+    data: DataPoint[];
+};

@@ -27,10 +27,12 @@ const TransactionsListItem:React.FC<TransactionsListItemType> = (
                 categoryInfo={categoryInfo}
                 emoji={emoji}
             />
-            <TransactionInfo date={transaction.date} description={transaction.description} id={transaction.id} />
+            <TransactionInfo date={transaction.date} description={transaction.description} id={transaction.id}/>
         </Card>
     )
 }
+
+// Components for ListItem
 
 function TransactionInfo({id, date, description}:{
     id: number;
@@ -39,10 +41,13 @@ function TransactionInfo({id, date, description}:{
 }){
     return(
         <View style={{flexGrow: 1, gap: 6, flexShrink: 1}}>
-            <Text style={{fontSize:16, fontWeight:"bold"}}>{description}</Text>
-            <Text>Transaction Number {id}</Text>
+            {/* Conditionnal rendering to avoid strange blank spot */}
+            { description ?
+                <Text style={{fontSize:16, fontWeight:"bold"}}>{description}</Text>
+            : ""}
             <Text style={{fontSize: 12, color: "gray"}}>
                 {new Date(date*1000).toDateString()}
+                {` - N°${id}`}
             </Text>
         </View>
     );
@@ -75,7 +80,7 @@ function Amount({iconName, color, amount}: {
                 fontSize={32}
                 mode={ResizeTextMode.max_lines}
                 numberOfLines={1}
-                style={[styles.amount, {maxWidth: "80%"}]}
+                style={[styles.amount, {maxWidth: "80%", color: color}]}
             >
                 ${amount}
             </AutoSizeText>
@@ -96,7 +101,8 @@ const styles = StyleSheet.create({
     categoryContainer: {
         borderRadius: 10,
         paddingHorizontal: 10,
-        paddingVertical : 3,
+        paddingVertical : 6,
+        marginVertical: 6,
         alignSelf: "flex-start",
     },
     categoryText: {
