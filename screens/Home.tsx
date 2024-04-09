@@ -6,6 +6,7 @@ import TransactionList from "../components/TransactionsList";
 import Card from "../components/ui/Card";
 import AddTransaction from "../components/AddTransaction";
 import NavBar from "../components/NavBar";
+import TransactionModal from "../components/ui/TransactionModal";
 
 export default function Home() {
     const [categories, setCategories] = React.useState<Category[]>([]);
@@ -15,6 +16,7 @@ export default function Home() {
         totalExpenses: 0,
         totalIncome: 0,
         });
+    const [isTransactionModalVisible, setIsTransactionModalVisible] = React.useState(false);
 
     const db = useSQLiteContext();
 
@@ -92,7 +94,15 @@ export default function Home() {
     return (
         <ScrollView contentContainerStyle={{ padding: 15, paddingVertical: 170 }}>
             <NavBar/>
-            <AddTransaction insertTransaction={insertTransaction} />
+            <TransactionModal
+                isVisible={isTransactionModalVisible}
+                setIsTransactionModalVisible={setIsTransactionModalVisible}
+                insertTransaction={insertTransaction}
+                categories={categories}
+            />
+            <AddTransaction
+                setIsTransactionModalVisible={setIsTransactionModalVisible}
+            />
             <TransactionSummary
                 totalExpenses={transactionsByMonth.totalExpenses}
                 totalIncome={transactionsByMonth.totalIncome}
